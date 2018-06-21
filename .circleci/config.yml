@@ -3,32 +3,35 @@ jobs:
   build:
     docker:
       - image: circleci/python:3.6.1
-      
-    working_directory: ~/may-circleci
+    working_directory: ~/circleci-workshop
 
     steps:
       - checkout
+
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "requirements.txt" }}
+
       - run:
           name: install dependencies
           command: |
             python3 -m venv venv
             . venv/bin/activate
             pip install -r requirements.txt
+
       - save_cache:
           paths:
             - ./venv
           key: v1-dependencies-{{ checksum "requirements.txt" }}
+
       - run:
           name: run static analysis
           command: |
             . venv/bin/activate
             python fizzbuzz.py
+          
       - run:
           name: run tests
           command: |
-            .venv/bin/activate
+            . venv/bin/activate
             python fizzbuzz.py
-          
